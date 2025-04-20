@@ -38,3 +38,6 @@ func (h *ProductHandler)UpdateProduct(ctx context.Context,req *pb.UpdateProductR
 	}
 	return h.productService.UpdateProductService(ID,req.Name,req.Description,req.Price)
 }
+func (h*ProductHandler)GetAllProducts(ctx context.Context,req *pb.Empty)(*pb.AllProductResponse,error){
+	return h.productService.GetAllProductService()
+}

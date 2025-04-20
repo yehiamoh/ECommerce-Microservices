@@ -25,3 +25,6 @@ func(s*ProductService)UpdateProductService(id int, name string,description strin
 func(s *ProductService)DeleteProductService(id int)(*pb.ProductResponse,error){
 	return s.ProductRepo.DeleteProduct(id)
 }
+func (s*ProductService)GetAllProductService()(*pb.AllProductResponse,error){
+	return s.ProductRepo.GetAllProducts()
+}

@@ -1,40 +1,51 @@
-syntax="proto3";
+syntax = "proto3";
 
 package product;
 
 option go_package = "product-service/gen/product;product";
 
-
-service Productservice{
+service Productservice {
     rpc CreateProduct(CreateProductRequest) returns (ProductResponse);
     rpc GetProduct(GetProductRequest) returns (ProductResponse);    
     rpc UpdateProduct(UpdateProductRequest) returns (ProductResponse);    
     rpc DeleteProduct(DeleteProductRequest) returns (ProductResponse);    
+    rpc GetAllProducts(Empty) returns (AllProductResponse);
 }
 
-message Product{
-    string id=1;
-    string name=2;
-    string description=3;
-    float price=4;
+message Product {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    float price = 4;
 }
-message CreateProductRequest{
-    string name=1;
-    string description=2;
-    float price=3;
+
+message CreateProductRequest {
+    string name = 1;
+    string description = 2;
+    float price = 3;
 }
-message GetProductRequest{
-    string id=1;
+
+message GetProductRequest {
+    string id = 1;
 }
-message DeleteProductRequest{
-    string id=1;
+
+message DeleteProductRequest {
+    string id = 1;
 }
-message UpdateProductRequest{
-    string id=1;
-    string name=2;
-    string description=3;
-    float price=4;
+
+message UpdateProductRequest {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    float price = 4;
 }
-message ProductResponse{
-    Product Product=1;
+
+message ProductResponse {
+    Product product = 1;
 }
+
+message AllProductResponse {
+    repeated Product products = 1;
+}
+
+message Empty {}

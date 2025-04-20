@@ -166,3 +166,40 @@ func (p *ProductRepository) DeleteProduct(id int) (*pb.ProductResponse, error) {
 	// Return the deleted product info
 	return existingProduct, nil
 }
+func (p *ProductRepository) GetAllProducts() (*pb.AllProductResponse, error) {
+	tx,err:=p.db.Begin()
+	if err!=nil{
+		return nil,err
+	}
+	defer tx.Rollback()
+	query:=`select * from product`;
+	rows,err:=tx.Query(query)
+	if err!=nil{
+		return nil,err
+	}
+
+	var products []*pb.Product
+	for rows.Next(){
+		var id, name, description string
+		var price float32
+
+		err:=rows.Scan(&id,&name,&description,&price)
+		if err!=nil{
+			return nil,err
+		}
+
+		product:=&pb.Product{
+			Id:id,
+			Name: name,
+			Description: description,
+			Price: price,
+		}
+		products=append(products, product)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return &pb.AllProductResponse{
+		Products: products,
+	},nil
+}

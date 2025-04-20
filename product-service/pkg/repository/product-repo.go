@@ -166,14 +166,22 @@ func (p *ProductRepository) DeleteProduct(id int) (*pb.ProductResponse, error) {
 	// Return the deleted product info
 	return existingProduct, nil
 }
-func (p *ProductRepository) GetAllProducts() (*pb.AllProductResponse, error) {
+func (p *ProductRepository) GetAllProducts(page,limit int) (*pb.AllProductResponse, error) {
+	
+	if page<=0{
+		page=1
+	}
+	if limit<=0{
+		limit=10
+	}
+	offset:=(page-1)*limit
 	tx,err:=p.db.Begin()
 	if err!=nil{
 		return nil,err
 	}
 	defer tx.Rollback()
-	query:=`select * from product`;
-	rows,err:=tx.Query(query)
+	query:=`select * from product limit $1 offset $2`;
+	rows,err:=tx.Query(query,limit,offset)
 	if err!=nil{
 		return nil,err
 	}

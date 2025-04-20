@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package product;
 
-option go_package = "product-service/gen/product;product";
+option go_package = "gen/product";
 
 service Productservice {
     rpc CreateProduct(CreateProductRequest) returns (ProductResponse);
@@ -52,3 +52,4 @@ message GetAllProductRequest {
     int32 page=1;
     int32 limit=2;
 }
+message Empty{}

@@ -8,9 +8,13 @@ import (
 
 func SetUpRoutes() error {
 	r := gin.Default()
-	r.GET("/products",routes.GetProductsRoute)
+	productRoutes(r)
 	if err:=r.Run(":8080");err!=nil{
 		return err
 	}
 	return nil
 }
+func productRoutes(router *gin.Engine){
+	router.GET("/products",routes.GetProductsRoute)
+	router.GET("/products/:id",routes.GetProductByIdRoute)
+} 

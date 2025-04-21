@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"api-gateway/services"
+	"api-gateway/pkg/services"
 	"fmt"
 	"net/http"
 	"strconv"

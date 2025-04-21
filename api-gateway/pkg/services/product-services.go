@@ -1,8 +1,8 @@
 package services
 
 import (
-	client "api-gateway/clients"
 	pb "api-gateway/gen/product"
+	client "api-gateway/pkg/clients"
 	"context"
 	"strconv"
 	"time"

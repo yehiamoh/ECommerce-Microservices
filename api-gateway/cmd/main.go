@@ -1,7 +1,7 @@
 package main
 
 import (
-	"api-gateway/server"
+	"api-gateway/pkg/server"
 	"log"
 )
 

@@ -1,7 +1,7 @@
 package server
 
 import (
-	"api-gateway/routes"
+	"api-gateway/pkg/routes"
 
 	"github.com/gin-gonic/gin"
 )

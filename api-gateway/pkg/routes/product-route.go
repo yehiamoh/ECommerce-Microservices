@@ -1,6 +1,7 @@
 package routes
 
 import (
+	pb "api-gateway/gen/product"
 	"api-gateway/pkg/services"
 	"fmt"
 	"net/http"
@@ -65,6 +66,48 @@ func GetProductByIdRoute(c *gin.Context){
 	}
 	c.JSON(http.StatusOK,gin.H{
 		"message":"Product Retrieved successfully",
+		"data":res,
+	})
+}
+
+func DeleteProductRoute(c *gin.Context){
+	idParam:=c.Param("id")
+	Id,err:=strconv.Atoi(idParam)
+	if err!=nil{
+		c.JSON(http.StatusBadRequest,gin.H{
+			"message":"Bad Request",
+		})
+		return
+	}
+	_,err=services.DeleteProductService(Id)
+	if err!=nil{
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"error":err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{
+		"message":"Product Deleted successfully",
+	})
+}
+
+func CreateProductRoute(c *gin.Context){
+	 productReq:= &pb.Product{}
+	if err:=c.ShouldBindJSON(productReq); err!=nil{
+		c.JSON(http.StatusBadRequest,gin.H{
+			"error":err.Error(),
+		})
+		return
+	}
+	res,err:=services.CreateProductService(productReq.Name,productReq.Description,productReq.Price)
+	if err!=nil{
+		c.JSON(http.StatusInternalServerError,gin.H{
+			"error":err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusCreated,gin.H{
+		"message":"product created successfully",
 		"data":res,
 	})
 }

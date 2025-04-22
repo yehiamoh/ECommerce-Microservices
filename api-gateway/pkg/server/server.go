@@ -16,5 +16,7 @@ func SetUpRoutes() error {
 }
 func productRoutes(router *gin.Engine){
 	router.GET("/products",routes.GetProductsRoute)
+	router.POST("products",routes.CreateProductRoute)
 	router.GET("/products/:id",routes.GetProductByIdRoute)
+	router.DELETE("/products/:id",routes.DeleteProductRoute)
 } 

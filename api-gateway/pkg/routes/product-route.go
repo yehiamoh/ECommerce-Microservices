@@ -10,7 +10,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetProductsRoute (c *gin.Context){
+type ProductRoutes struct{
+	ProductService *services.ProductService
+}
+
+func NewProductRoutes(service *services.ProductService) *ProductRoutes {
+    return &ProductRoutes{ProductService: service}
+}
+
+func (pr *ProductRoutes)GetProductsRoute (c *gin.Context){
 	pageParam:=c.DefaultQuery("page","1")
 	limitParam:=c.DefaultQuery("limit","5")
 
@@ -23,7 +31,7 @@ func GetProductsRoute (c *gin.Context){
 		})
 		return
 	}
-	res,err:=services.GetAllProductService(int32(page),int32(limit))
+	res,err:=pr.ProductService.GetAllProductService(int32(page),int32(limit))
 	if res ==nil ||len(res.Products)==0{
 		c.JSON(http.StatusNotFound,gin.H{
 			"message":"No product found",
@@ -42,7 +50,7 @@ func GetProductsRoute (c *gin.Context){
 		"data":res,
 	})
 }
-func GetProductByIdRoute(c *gin.Context){
+func (pr *ProductRoutes)GetProductByIdRoute(c *gin.Context){
 	IdParam:=c.Param("id")
 	Id,err:=strconv.Atoi(IdParam)
 	if err!=nil{
@@ -51,7 +59,7 @@ func GetProductByIdRoute(c *gin.Context){
 		})
 		return
 	}
-	res,err:=services.GetProductByIdService(Id)
+	res,err:=pr.ProductService.GetProductByIdService(Id)
 	if err!=nil{
 		c.JSON(http.StatusInternalServerError,gin.H{
 			"error":err.Error(),
@@ -70,7 +78,7 @@ func GetProductByIdRoute(c *gin.Context){
 	})
 }
 
-func DeleteProductRoute(c *gin.Context){
+func  (pr *ProductRoutes)DeleteProductRoute(c *gin.Context){
 	idParam:=c.Param("id")
 	Id,err:=strconv.Atoi(idParam)
 	if err!=nil{
@@ -79,7 +87,7 @@ func DeleteProductRoute(c *gin.Context){
 		})
 		return
 	}
-	_,err=services.DeleteProductService(Id)
+	_,err=pr.ProductService.DeleteProductService(Id)
 	if err!=nil{
 		c.JSON(http.StatusInternalServerError,gin.H{
 			"error":err.Error(),
@@ -91,7 +99,7 @@ func DeleteProductRoute(c *gin.Context){
 	})
 }
 
-func CreateProductRoute(c *gin.Context){
+func (pr *ProductRoutes)CreateProductRoute(c *gin.Context){
 	 productReq:= &pb.Product{}
 	if err:=c.ShouldBindJSON(productReq); err!=nil{
 		c.JSON(http.StatusBadRequest,gin.H{
@@ -99,7 +107,7 @@ func CreateProductRoute(c *gin.Context){
 		})
 		return
 	}
-	res,err:=services.CreateProductService(productReq.Name,productReq.Description,productReq.Price)
+	res,err:=pr.ProductService.CreateProductService(productReq.Name,productReq.Description,productReq.Price)
 	if err!=nil{
 		c.JSON(http.StatusInternalServerError,gin.H{
 			"error":err.Error(),

@@ -5,7 +5,7 @@ import (
 
 	"google.golang.org/grpc"
 )
-func ProductClient() (pb.ProductserviceClient,error) {
+func NewProductClient() (pb.ProductserviceClient,error) {
 	conn,err:=grpc.Dial("localhost:50051",grpc.WithInsecure(),grpc.WithBlock())
 	if err!=nil{
 		return nil,err

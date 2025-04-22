@@ -6,17 +6,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetUpRoutes() error {
-	r := gin.Default()
-	productRoutes(r)
-	if err:=r.Run(":8080");err!=nil{
-		return err
-	}
-	return nil
+type Server struct{
+	Router *gin.Engine
 }
-func productRoutes(router *gin.Engine){
-	router.GET("/products",routes.GetProductsRoute)
-	router.POST("products",routes.CreateProductRoute)
-	router.GET("/products/:id",routes.GetProductByIdRoute)
-	router.DELETE("/products/:id",routes.DeleteProductRoute)
-} 
+
+func NewServer()*Server{
+	return &Server{
+		Router: gin.Default(),
+	}
+}
+
+func (s *Server) RegisterRoutes(productRoutes *routes.ProductRoutes) {
+    s.Router.GET("/products", productRoutes.GetProductsRoute)
+	s.Router.POST("/products", productRoutes.CreateProductRoute)
+    s.Router.GET("/products/:id", productRoutes.GetProductByIdRoute)
+    s.Router.DELETE("/products/:id", productRoutes.DeleteProductRoute)
+}
+
+func (s *Server) Run() error {
+    return s.Router.Run(":8080")
+}

@@ -13,6 +13,18 @@ services:
       - "5435:5432"
     volumes:
       - ./database/product_pgdata:/var/lib/postgresql/data
+  user-db:
+    image: postgres:15
+    container_name: user-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: userdb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5436:5432"
+    volumes:
+      - ./database/user_pgdata:/var/lib/postgresql/data
 
   kafka:
     image: wurstmeister/kafka

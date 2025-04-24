@@ -1,0 +1,128 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "gen/user";
+
+import "google/protobuf/timestamp.proto";
+
+// UserService defines the gRPC service for user-related operations.
+service UserService {
+  // CreateUser creates a new user account.
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+  
+  // AuthenticateUser authenticates a user and returns a token.
+  rpc AuthenticateUser (AuthenticateUserRequest) returns (AuthenticateUserResponse);
+  
+  // GetUser retrieves user details by ID.
+  rpc GetUser (GetUserRequest) returns (GetUserResponse);
+  
+  // UpdateUser updates user profile information.
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
+  
+  // DeleteUser deactivates or deletes a user account.
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+  
+  // ListUsers retrieves a paginated list of users (e.g., for admin purposes).
+  rpc ListUsers (ListUsersRequest) returns (ListUsersResponse);
+}
+
+// --- Messages for User Data ---
+
+// User represents a user entity.
+message User {
+  string id = 1; // Unique user ID (e.g., UUID).
+  string email = 2; // User's email address.
+  string first_name = 3; // User's first name.
+  string last_name = 4; // User's last name.
+  Role role = 5; // User's role (e.g., CUSTOMER, ADMIN).
+  google.protobuf.Timestamp created_at = 6; // Account creation timestamp.
+  google.protobuf.Timestamp updated_at = 7; // Last update timestamp.
+}
+
+// Role defines user roles in the system.
+enum Role {
+  CUSTOMER = 0; // Default user role.
+  ADMIN = 1; // Admin user with elevated privileges.
+  SELLER = 2; // Seller role for marketplace scenarios.
+}
+
+// --- Request Messages ---
+
+// CreateUserRequest for creating a new user.
+message CreateUserRequest {
+  string email = 1; // Required: User's email.
+  string password = 2; // Required: User's password.
+  string first_name = 3; // Optional: First name.
+  string last_name = 4; // Optional: Last name.
+  Role role = 5; // Optional: Role, defaults to CUSTOMER.
+}
+
+// AuthenticateUserRequest for user login.
+message AuthenticateUserRequest {
+  string email = 1; // User's email.
+  string password = 2; // User's password.
+}
+
+// GetUserRequest to fetch user details.
+message GetUserRequest {
+  string user_id = 1; // User's ID.
+}
+
+// UpdateUserRequest to update user profile.
+message UpdateUserRequest {
+  string user_id = 1; // User's ID.
+  string first_name = 2; // Optional: Update first name.
+  string last_name = 3; // Optional: Update last name.
+}
+
+// DeleteUserRequest to deactivate/delete a user.
+message DeleteUserRequest {
+  string user_id = 1; // User's ID.
+}
+
+// ListUsersRequest for paginated user listing.
+message ListUsersRequest {
+  int32 page = 1; // Page number (1-based).
+  int32 page_size = 2; // Number of users per page.
+  string role_filter = 3; // Optional: Filter by role (e.g., "CUSTOMER").
+}
+
+// --- Response Messages ---
+
+// CreateUserResponse for user creation.
+message CreateUserResponse {
+  User user = 1; // Created user details.
+  string message = 2; // Success or error message.
+}
+
+// AuthenticateUserResponse for authentication.
+message AuthenticateUserResponse {
+  string token = 1; // JWT or session token.
+  User user = 2; // Authenticated user details.
+  string message = 3; // Success or error message.
+}
+
+// GetUserResponse for fetching user details.
+message GetUserResponse {
+  User user = 1; // User details.
+  string message = 2; // Success or error message.
+}
+
+// UpdateUserResponse for updating user profile.
+message UpdateUserResponse {
+  User user = 1; // Updated user details.
+  string message = 2; // Success or error message.
+}
+
+// DeleteUserResponse for user deletion.
+message DeleteUserResponse {
+  string message = 1; // Success or error message.
+}
+
+// ListUsersResponse for paginated user listing.
+message ListUsersResponse {
+  repeated User users = 1; // List of users.
+  int32 total = 2; // Total number of users.
+  string message = 3; // Success or error message.
+}

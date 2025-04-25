@@ -19,6 +19,7 @@ func Start() error {
 		log.Fatal("Opening Database",err)
 		return err
 	}
+	defer db.Close()
 
 	repo:=repository.NewProductRepository(db)
 	service:=services.NewProductService(repo)

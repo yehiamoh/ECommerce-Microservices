@@ -12,19 +12,11 @@ service UserService {
   rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
   
   // AuthenticateUser authenticates a user and returns a token.
-  rpc AuthenticateUser (AuthenticateUserRequest) returns (AuthenticateUserResponse);
+  rpc Login (AuthenticateUserRequest) returns (AuthenticateUserResponse);
   
   // GetUser retrieves user details by ID.
   rpc GetUser (GetUserRequest) returns (GetUserResponse);
   
-  // UpdateUser updates user profile information.
-  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
-  
-  // DeleteUser deactivates or deletes a user account.
-  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
-  
-  // ListUsers retrieves a paginated list of users (e.g., for admin purposes).
-  rpc ListUsers (ListUsersRequest) returns (ListUsersResponse);
 }
 
 // --- Messages for User Data ---
@@ -38,6 +30,7 @@ message User {
   Role role = 5; // User's role (e.g., CUSTOMER, ADMIN).
   google.protobuf.Timestamp created_at = 6; // Account creation timestamp.
   google.protobuf.Timestamp updated_at = 7; // Last update timestamp.
+  string password=8;
 }
 
 // Role defines user roles in the system.

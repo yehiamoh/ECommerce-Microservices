@@ -42,7 +42,7 @@ func (r *UserRepository) CreateUser(email, password, firstName, lastName, role s
     switch role {
     case "ADMIN":
         userRole = pb.Role_ADMIN
-    case "USER":
+    case "CUSTOMER":
         userRole = pb.Role_CUSTOMER
     case "SELLER":
         userRole = pb.Role_SELLER
@@ -63,15 +63,15 @@ func (r *UserRepository) CreateUser(email, password, firstName, lastName, role s
     return response, nil
 }
 
-func (r *UserRepository) GetUser(id int) (*pb.GetUserResponse, error) {
+func (r *UserRepository) GetUserByID(id int) (*pb.GetUserResponse, error) {
     user := &pb.User{}
+    var role string
     query := `
     SELECT id, email, first_name, last_name, role
     FROM users
     WHERE id = $1
     `
 
-    var role string
     err := r.db.QueryRow(query, id).Scan(&user.Id, &user.Email, &user.FirstName, &user.LastName, &role)
     if err != nil {
         if err == sql.ErrNoRows {
@@ -79,19 +79,44 @@ func (r *UserRepository) GetUser(id int) (*pb.GetUserResponse, error) {
         }
         return nil, err
     }
-
     switch role {
     case "ADMIN":
         user.Role = pb.Role_ADMIN
-    case "USER":
+    case "CUSTOMER":
         user.Role = pb.Role_CUSTOMER
     case "SELLER":
         user.Role = pb.Role_SELLER
     default:
         return nil, fmt.Errorf("invalid role in database: %s", role)
     }
-
     return &pb.GetUserResponse{
         User: user,
     }, nil
+}
+func (r *UserRepository) GetUserByEmail(email string) (*pb.User, error) {
+    user := &pb.User{}
+    var role string 
+    query := `
+    SELECT id, email, password,first_name, last_name, role
+    FROM users
+    WHERE email = $1
+    `
+    err := r.db.QueryRow(query, email).Scan(&user.Id, &user.Email, &user.Password,&user.FirstName, &user.LastName, &role)
+    if err != nil {
+        if err == sql.ErrNoRows {
+            return nil, nil
+        }
+        return nil, err
+    }
+    switch role {
+    case "ADMIN":
+        user.Role = pb.Role_ADMIN
+    case "CUSTOMER":
+        user.Role = pb.Role_CUSTOMER
+    case "SELLER":
+        user.Role = pb.Role_SELLER
+    default:
+        return nil, fmt.Errorf("invalid role in database: %s", role)
+    }
+    return user, nil
 }

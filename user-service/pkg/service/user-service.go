@@ -18,10 +18,11 @@ func checkPasswordHash(password,hash string)bool{
 	err:=bcrypt.CompareHashAndPassword([]byte(hash),[]byte(password))
 	return err==nil
 }
-func genertaeJWT(userID string)(string,error){
+func genertaeJWT(userID string,role string)(string,error){
 	jwtSecret:=[]byte("jwt-secret")
 	claims:=jwt.MapClaims{
 		"user_id":userID,
+		"user_role":role,
 		"exp":time.Now().Add(time.Hour*24).Unix(),
 	}
 	token:=jwt.NewWithClaims(jwt.SigningMethodHS512,claims)
@@ -51,7 +52,7 @@ func (u *UserService)Login(email,password string)(*pb.AuthenticateUserResponse,e
 	if !checkPasswordHash(password,user.Password){
 		return nil,err
 	}
-	token,err:=genertaeJWT(user.Id)
+	token,err:=genertaeJWT(user.Id,user.Role.String())
 	if err!=nil{
 		return nil,err
 	}

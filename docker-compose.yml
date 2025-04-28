@@ -25,6 +25,18 @@ services:
       - "5436:5432"
     volumes:
       - ./database/user_pgdata:/var/lib/postgresql/data
+  inventory-db:
+    image: postgres:15
+    container_name: inventory-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: inventorydb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5437:5432"
+    volumes:
+      - ./database/inventory_pgdata:/var/lib/postgresql/data
 
   kafka:
     image: wurstmeister/kafka

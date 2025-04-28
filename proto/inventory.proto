@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package inventory;
+option go_package="gen/inventory";
+// The Inventory service definition.
+service InventoryService {
+  // Add new stock
+  rpc AddStock(AddStockRequest) returns (AddStockResponse);
+
+  // Modify existing stock
+  rpc ModifyStock(ModifyStockRequest) returns (ModifyStockResponse);
+
+  // Check stock of a product
+  rpc CheckStock(CheckStockRequest) returns (CheckStockResponse);
+
+  // Decrease stock when an order is created
+  rpc DecreaseStock(DecreaseStockRequest) returns (DecreaseStockResponse);
+}
+
+// Request message for adding stock
+message AddStockRequest {
+  string user_id = 1;         // ID of the user making the request
+  string user_role = 2;       // Role of the user (e.g., "SELLER")
+  string product_id = 3;      // ID of the product
+  int32 quantity = 4;         // Quantity to add
+}
+
+// Response message for adding stock
+message AddStockResponse {
+  string message = 1;         // Success or error message
+}
+
+// Request message for modifying stock
+message ModifyStockRequest {
+  string user_id = 1;         // ID of the user making the request
+  string user_role = 2;       // Role of the user (e.g., "SELLER")
+  string stock_id = 3;        // ID of the stock to modify
+  int32 new_quantity = 4;     // New quantity to set
+}
+
+// Response message for modifying stock
+message ModifyStockResponse {
+  string message = 1;         // Success or error message
+}
+
+// Request message for checking stock
+message CheckStockRequest {
+  string product_id = 1;      // ID of the product to check
+}
+
+// Response message for checking stock
+message CheckStockResponse {
+  string product_id = 1;      // ID of the product
+  int32 available_quantity = 2; // Available stock quantity
+}
+
+// Request message for decreasing stock
+message DecreaseStockRequest {
+  string product_id = 1;      // ID of the product
+  int32 quantity = 2;         // Quantity to decrease
+}
+
+// Response message for decreasing stock
+message DecreaseStockResponse {
+  string message = 1;         // Success or error message
+  int32 remaining_quantity = 2; // Remaining stock quantity after decrease
+}

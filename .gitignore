@@ -1,3 +1,4 @@
 database
 product-service/client
 user-service/client
+inventory-service/client

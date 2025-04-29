@@ -3,7 +3,7 @@ package repository
 import (
 	"database/sql"
 
-	_ "github.com/jackc/pgx/v4"
+	_ "github.com/jackc/pgx/v4/stdlib"
 )
 func Open()(*sql.DB,error){
 	connStr := "postgres://user:pass@localhost:5437/inventorydb?sslmode=disable"
